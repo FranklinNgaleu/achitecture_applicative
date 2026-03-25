@@ -1,5 +1,21 @@
 from collections.abc import Iterable, Iterator
 
+def add_matter_4(cls):
+    original_init = cls.__init__
+
+    def new_init(self, name, grade1, grade2, grade3, grade4):
+        original_init(self, name, grade1, grade2, grade3)
+        self.grade4 = grade4
+
+    def new_average(self):
+        return (self.grade1 + self.grade2 + self.grade3 + self.grade4) / 4
+
+    cls.__init__ = new_init
+    cls.average = new_average
+    return cls
+
+
+@add_matter_4
 class Student:
     def __init__(self, name, grade1, grade2, grade3):
         self.name = name
@@ -11,7 +27,14 @@ class Student:
         return (self.grade1 + self.grade2 + self.grade3) / 3
     
     def __str__(self):
-        return f"{self.name} - avg: {self.average():.2f}"
+        return (
+            f"{self.name} - "
+            f"m1:{self.grade1} "
+            f"m2:{self.grade2} "
+            f"m3:{self.grade3} "
+            f"m4:{self.grade4} "
+            f"avg:{self.average():.2f}"
+        )
     
 class SchoolClassIterator(Iterator):
     def __init__(self, students):
@@ -79,9 +102,9 @@ class SchoolClass(Iterable):
 
 if __name__ == "__main__":
     school_class = SchoolClass()
-    school_class.add_student(Student('J', 10, 12, 13))
-    school_class.add_student(Student('A', 8, 2, 17))
-    school_class.add_student(Student('V', 9, 14, 14))
+    school_class.add_student(Student('J', 10, 12, 13, 15))
+    school_class.add_student(Student('A', 8, 2, 17, 11))
+    school_class.add_student(Student('V', 9, 14, 14, 16))
 
     print("Classement matière 1 :")
     for student in school_class.rank_matter_1():
@@ -106,4 +129,7 @@ if __name__ == "__main__":
     print("\nParcours via l'itérateur (matière 3 décroissante) :")
     for student in school_class.iter_matter_3():
         print(student)
-        
+
+    print("\nVérification matière 4 :")
+    for student in school_class.students:
+        print(f"{student.name} -> m4:{student.grade4}")
