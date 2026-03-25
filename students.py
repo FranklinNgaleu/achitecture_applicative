@@ -24,6 +24,31 @@ class SchoolClassIterator(Iterator):
         student = self._students[self._index]
         self._index += 1
         return student
+    
+class SchoolClassIteratorMatter2(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.grade2, reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index >= len(self._students):
+            raise StopIteration
+        student = self._students[self._index]
+        self._index += 1
+        return student
+
+
+class SchoolClassIteratorMatter3(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.grade3, reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index >= len(self._students):
+            raise StopIteration
+        student = self._students[self._index]
+        self._index += 1
+        return student
 
 
 class SchoolClass(Iterable):
@@ -35,6 +60,12 @@ class SchoolClass(Iterable):
 
     def __iter__(self):
         return SchoolClassIterator(self.students)
+    
+    def iter_matter_2(self):
+        return SchoolClassIteratorMatter2(self.students)
+
+    def iter_matter_3(self):
+        return SchoolClassIteratorMatter3(self.students)
     
     def rank_matter_1(self):
         return sorted(self.students, key=lambda s: s.grade1, reverse=True)
@@ -67,3 +98,12 @@ if __name__ == "__main__":
     print("Parcours via l'itérateur (matière 1 décroissante) :")
     for student in school_class:
         print(student)
+    
+    print("\nParcours via l'itérateur (matière 2 décroissante) :")
+    for student in school_class.iter_matter_2():
+        print(student)
+    
+    print("\nParcours via l'itérateur (matière 3 décroissante) :")
+    for student in school_class.iter_matter_3():
+        print(student)
+        
