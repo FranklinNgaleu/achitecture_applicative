@@ -14,6 +14,13 @@ def add_matter_4(cls):
     cls.average = new_average
     return cls
 
+def add_iter_matter_4(cls):
+    def iter_matter_4(self):
+        return SchoolClassIteratorMatter4(self.students)
+
+    cls.iter_matter_4 = iter_matter_4
+    return cls
+
 
 @add_matter_4
 class Student:
@@ -73,7 +80,19 @@ class SchoolClassIteratorMatter3(Iterator):
         self._index += 1
         return student
 
+class SchoolClassIteratorMatter4(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.grade4, reverse=True)
+        self._index = 0
 
+    def __next__(self):
+        if self._index >= len(self._students):
+            raise StopIteration
+        student = self._students[self._index]
+        self._index += 1
+        return student
+
+@add_iter_matter_4
 class SchoolClass(Iterable):
     def __init__(self):
         self.students = []
@@ -133,3 +152,7 @@ if __name__ == "__main__":
     print("\nVérification matière 4 :")
     for student in school_class.students:
         print(f"{student.name} -> m4:{student.grade4}")
+
+    print("\nParcours via l'itérateur (matière 4 décroissante) :")
+    for student in school_class.iter_matter_4():
+        print(student)
