@@ -94,11 +94,20 @@ class SchoolClassIteratorMatter4(Iterator):
 
 @add_iter_matter_4
 class SchoolClass(Iterable):
+
+    _instance = None
+
     def __init__(self):
-        self.students = []
+        if not hasattr(self, "students"):
+            self.students = []
 
     def add_student(self, student):
         self.students.append(student)
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __iter__(self):
         return SchoolClassIterator(self.students)
@@ -121,6 +130,7 @@ class SchoolClass(Iterable):
 
 if __name__ == "__main__":
     school_class = SchoolClass()
+    same_school_class = SchoolClass()
     school_class.add_student(Student('J', 10, 12, 13, 15))
     school_class.add_student(Student('A', 8, 2, 17, 11))
     school_class.add_student(Student('V', 9, 14, 14, 16))
@@ -156,3 +166,6 @@ if __name__ == "__main__":
     print("\nParcours via l'itérateur (matière 4 décroissante) :")
     for student in school_class.iter_matter_4():
         print(student)
+
+    print("\nSingleton :")
+    print(school_class is same_school_class)
